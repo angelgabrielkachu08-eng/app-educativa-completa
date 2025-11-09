@@ -1,0 +1,13 @@
+{
+  "name": "institucion-educativa-app",
+  "version": "1.0.0",
+  "description": "Aplicación web completa para institución educativa",
+  "scripts": {
+    "start": "cd backend && node server.js",
+    "dev": "cd backend && nodemon server.js",
+    "build": "echo 'Build completo'"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institución Educativa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between">
+            <h1 class="text-xl font-bold">Institución Educativa</h1>
+            <div class="space-x-4">
+                <a href="/" class="hover:underline">Home</a>
+                <a href="/cargar-alumno" class="hover:underline">Cargar Alumno</a>
+                <a href="/listado-alumnos" class="hover:underline">Listado</a>
+                <a href="/historia" class="hover:underline">Historia</a>
+                <a href="/ia-generativa" class="hover:underline">IA Generativa</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto mt-8 p-4">
+        <!-- Widget de Clima -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Clima Actual</h2>
+            <div id="clima-widget" class="text-center">
+                <div class="text-4xl mb-2">🌤️</div>
+                <p id="temperatura" class="text-3xl font-bold">--°C</p>
+                <p id="descripcion" class="text-gray-600">Cargando...</p>
+                <p id="ubicacion" class="text-gray-500">--</p>
+            </div>
+            
+            <!-- Buscador de Ciudades -->
+            <div class="mt-6">
+                <h3 class="text-lg font-semibold mb-2">Buscar clima en otra ciudad</h3>
+                <div class="flex gap-2">
+                    <input type="text" id="ciudad-buscador" 
+                           placeholder="Ej: Buenos Aires, Madrid, Tokyo"
+                           class="flex-1 p-2 border rounded-lg">
+                    <button onclick="buscarClima()" 
+                            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                        Buscar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información rápida -->
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="font-bold text-lg mb-2">📊 Gestión de Alumnos</h3>
+                <p>Sistema completo para administrar estudiantes</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="font-bold text-lg mb-2">🏫 Nuestra Historia</h3>
+                <p>Conoce nuestra trayectoria educativa</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="font-bold text-lg mb-2">🤖 IA en Educación</h3>
+                <p>Explora el futuro de la tecnología</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/clima.js"></script>
+</body>
+</html>

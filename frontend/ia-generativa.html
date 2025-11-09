@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA Generativa - Institución Educativa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between">
+            <h1 class="text-xl font-bold">Institución Educativa</h1>
+            <div class="space-x-4">
+                <a href="/" class="hover:underline">Home</a>
+                <a href="/cargar-alumno" class="hover:underline">Cargar Alumno</a>
+                <a href="/listado-alumnos" class="hover:underline">Listado</a>
+                <a href="/historia" class="hover:underline">Historia</a>
+                <a href="/ia-generativa" class="hover:underline">IA Generativa</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto mt-8 p-4 max-w-4xl">
+        <h1 class="text-3xl font-bold mb-8 text-center">Unidad 6 - IA Generativa</h1>
+
+        <!-- Qué es IA Generativa -->
+        <section class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">¿Qué es la Inteligencia Artificial Generativa?</h2>
+            <p class="text-gray-700 mb-4">
+                La IA Generativa es un tipo de inteligencia artificial capaz de crear contenido nuevo y original, 
+                como texto, imágenes, música o código, a partir de los datos con los que ha sido entrenada.
+            </p>
+            <div class="bg-blue-50 p-4 rounded-lg">
+                <p class="text-blue-800">
+                    <strong>Características principales:</strong> Creatividad, originalidad, aprendizaje de patrones 
+                    y capacidad de generar contenido similar pero no idéntico al de entrenamiento.
+                </p>
+            </div>
+        </section>
+
+        <!-- Herramientas de IA -->
+        <section class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Herramientas de IA Generativa</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-bold text-lg mb-2">🤖 ChatGPT</h3>
+                    <p>Modelo de lenguaje para conversación, escritura y resolución de problemas.</p>
+                </div>
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-bold text-lg mb-2">💻 GitHub Copilot</h3>
+                    <p>Asistente de código que sugiere líneas y funciones completas.</p>
+                </div>
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-bold text-lg mb-2">🎨 DALL·E</h3>
+                    <p>Generador de imágenes a partir de descripciones textuales.</p>
+                </div>
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-bold text-lg mb-2">🔊 ElevenLabs</h3>
+                    <p>Generación de voz natural a partir de texto.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ejemplos de Prompts -->
+        <section class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Ejemplos de Prompts Útiles</h2>
+            
+            <div class="space-y-4">
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <h4 class="font-semibold">Generar código JavaScript:</h4>
+                    <code class="bg-gray-100 p-2 rounded block mt-2">
+                        "Crea una función en JavaScript que valide un formulario de registro con los campos: 
+                        nombre, email y contraseña. La contraseña debe tener al menos 8 caracteres, 
+                        una mayúscula y un número."
+                    </code>
+                </div>
+
+                <div class="border-l-4 border-green-500 pl-4">
+                    <h4 class="font-semibold">Diseño web con Tailwind:</h4>
+                    <code class="bg-gray-100 p-2 rounded block mt-2">
+                        "Genera un card de producto usando Tailwind CSS que incluya: imagen, título, 
+                        descripción, precio y botón de compra. Usa colores modernos y diseño responsive."
+                    </code>
+                </div>
+
+                <div class="border-l-4 border-purple-500 pl-4">
+                    <h4 class="font-semibold">Planificación de proyecto:</h4>
+                    <code class="bg-gray-100 p-2 rounded block mt-2">
+                        "Crea un plan de desarrollo para una aplicación web de gestión de tareas con 
+                        las siguientes características: autenticación de usuarios, CRUD de tareas, 
+                        categorías y fechas de vencimiento."
+                    </code>
+                </div>
+            </div>
+        </section>
+
+        <!-- Análisis de Aplicación Real -->
+        <section class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Análisis: Aplicación Web con IA</h2>
+            
+            <div class="bg-yellow-50 p-4 rounded-lg mb-4">
+                <h3 class="font-bold text-lg mb-2">📊 ChatGPT Enterprise</h3>
+                <p><strong>Función de la IA:</strong> Asistente conversacional para empresas</p>
+                <p><strong>Ventajas:</strong> 
+                    <ul class="list-disc list-inside mt-2">
+                        <li>Procesamiento de lenguaje natural avanzado</li>
+                        <li>Personalización para necesidades empresariales</li>
+                        <li>Análisis de datos y generación de informes</li>
+                    </ul>
+                </p>
+            </div>
+
+            <p class="text-gray-700">
+                <strong>Impacto:</strong> Esta aplicación demuestra cómo la IA puede potenciar la productividad 
+                empresarial, pero también plantea preguntas sobre la privacidad de datos y la dependencia 
+                tecnológica.
+            </p>
+        </section>
+
+        <!-- Uso Ético -->
+        <section class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Uso Ético y Responsable de la IA</h2>
+            
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="bg-red-50 p-4 rounded-lg">
+                    <h4 class="font-bold text-red-800">❌ Lo que NO debemos hacer:</h4>
+                    <ul class="list-disc list-inside text-red-700 mt-2">
+                        <li>Plagiar contenido generado por IA</li>
+                        <li>Usar IA para generar desinformación</li>
+                        <li>Depender ciegamente sin verificar resultados</li>
+                        <li>Violar derechos de autor y propiedad intelectual</li>
+                    </ul>
+                </div>
+
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <h4 class="font-bold text-green-800">✅ Lo que SÍ debemos hacer:</h4>
+                    <ul class="list-disc list-inside text-green-700 mt-2">
+                        <li>Verificar y validar la información</li>
+                        <li>Dar crédito cuando corresponda</li>
+                        <li>Usar como herramienta de apoyo, no reemplazo</li>
+                        <li>Considerar implicaciones éticas</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Debate Crítico -->
+        <section class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-bold mb-4">Debate: ¿La IA reemplaza o potencia al desarrollador?</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-3">🚀 La IA como potenciadora</h3>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Acelera el desarrollo:</strong> Genera código base rápidamente</li>
+                        <li><strong>Reduce errores:</strong> Detecta bugs y sugiere mejoras</li>
+                        <li><strong>Amplía capacidades:</strong> Permite abordar proyectos más complejos</li>
+                        <li><strong>Fomenta la creatividad:</strong> Libera tiempo para diseño e innovación</li>
+                    </ul>
+                </div>
+
+                <div class="bg-orange-50 p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-3">⚠️ Riesgos de reemplazo</h3>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Desvalorización:</strong> Tareas básicas pueden automatizarse</li>
+                        <li><strong>Dependencia:</strong> Pérdida de habilidades fundamentales</li>
+                        <li><strong>Homogeneización:</strong> Código similar en diferentes proyectos</li>
+                        <li><strong>Desempleo:</strong> Reducción de puestos junior</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-purple-50 rounded-lg">
+                <h4 class="font-bold text-lg mb-2">💡 Nuestra postura crítica:</h4>
+                <p class="text-gray-700">
+                    La IA no reemplaza al desarrollador, sino que transforma su rol. Los desarrolladores 
+                    deben evolucionar hacia roles más estratégicos: arquitectura de sistemas, toma de 
+                    decisiones complejas y supervisión de la calidad del código generado. La verdadera 
+                    amenaza no es la IA en sí, sino la falta de adaptación a esta nueva realidad.
+                </p>
+                <p class="mt-2 font-semibold">
+                    "La IA es la herramienta, el desarrollador sigue siendo el artesano."
+                </p>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

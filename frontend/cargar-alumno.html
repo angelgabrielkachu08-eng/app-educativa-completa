@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargar Alumno - Institución Educativa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between">
+            <h1 class="text-xl font-bold">Institución Educativa</h1>
+            <div class="space-x-4">
+                <a href="/" class="hover:underline">Home</a>
+                <a href="/cargar-alumno" class="hover:underline">Cargar Alumno</a>
+                <a href="/listado-alumnos" class="hover:underline">Listado</a>
+                <a href="/historia" class="hover:underline">Historia</a>
+                <a href="/ia-generativa" class="hover:underline">IA Generativa</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto mt-8 p-4">
+        <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-bold mb-6">Cargar Nuevo Alumno</h2>
+            
+            <form id="form-alumno" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Nombre completo *</label>
+                    <input type="text" id="nombre" name="nombre" 
+                           class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                           required>
+                    <span class="text-red-500 text-sm hidden" id="error-nombre">El nombre es requerido</span>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Email *</label>
+                    <input type="email" id="email" name="email"
+                           class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                           required>
+                    <span class="text-red-500 text-sm hidden" id="error-email">Email válido requerido</span>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Curso *</label>
+                    <select id="curso" name="curso" 
+                            class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                            required>
+                        <option value="">Seleccionar curso</option>
+                        <option value="1A">1° Año - A</option>
+                        <option value="1B">1° Año - B</option>
+                        <option value="2A">2° Año - A</option>
+                        <option value="2B">2° Año - B</option>
+                        <option value="3A">3° Año - A</option>
+                        <option value="3B">3° Año - B</option>
+                    </select>
+                    <span class="text-red-500 text-sm hidden" id="error-curso">Selecciona un curso</span>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Fecha de Nacimiento *</label>
+                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento"
+                           class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                           required>
+                    <span class="text-red-500 text-sm hidden" id="error-fecha">Fecha válida requerida</span>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono"
+                           class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                </div>
+
+                <div class="flex gap-4 pt-4">
+                    <button type="submit" 
+                            class="flex-1 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
+                        Guardar Alumno
+                    </button>
+                    <button type="button" onclick="limpiarFormulario()"
+                            class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
+                        Limpiar
+                    </button>
+                </div>
+            </form>
+
+            <div id="mensaje-exito" class="mt-4 p-4 bg-green-100 text-green-700 rounded-md hidden">
+                Alumno guardado exitosamente!
+            </div>
+        </div>
+    </main>
+
+    <script src="js/alumnos.js"></script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Alumnos - Institución Educativa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between">
+            <h1 class="text-xl font-bold">Institución Educativa</h1>
+            <div class="space-x-4">
+                <a href="/" class="hover:underline">Home</a>
+                <a href="/cargar-alumno" class="hover:underline">Cargar Alumno</a>
+                <a href="/listado-alumnos" class="hover:underline">Listado</a>
+                <a href="/historia" class="hover:underline">Historia</a>
+                <a href="/ia-generativa" class="hover:underline">IA Generativa</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto mt-8 p-4">
+        <h2 class="text-2xl font-bold mb-6">Listado de Alumnos</h2>
+        
+        <!-- Filtro por curso -->
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Filtrar por curso:</label>
+            <select id="filtro-curso" class="p-2 border rounded-lg">
+                <option value="">Todos los cursos</option>
+                <option value="1A">1° Año - A</option>
+                <option value="1B">1° Año - B</option>
+                <option value="2A">2° Año - A</option>
+                <option value="2B">2° Año - B</option>
+                <option value="3A">3° Año - A</option>
+                <option value="3B">3° Año - B</option>
+            </select>
+            <button onclick="cargarAlumnos()" class="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                Filtrar
+            </button>
+        </div>
+
+        <!-- Tabla de alumnos -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <table class="min-w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Curso</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-alumnos" class="divide-y divide-gray-200">
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">Cargando alumnos...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal de Edición -->
+    <div id="modal-edicion" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+            <h3 class="text-xl font-bold mb-4">Editar Alumno</h3>
+            
+            <form id="form-edicion" class="space-y-4">
+                <input type="hidden" id="edit-id">
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Nombre completo *</label>
+                    <input type="text" id="edit-nombre" 
+                           class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                           required>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Email *</label>
+                    <input type="email" id="edit-email"
+                           class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                           required>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Curso *</label>
+                    <select id="edit-curso" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" required>
+                        <option value="">Seleccionar curso</option>
+                        <option value="1A">1° Año - A</option>
+                        <option value="1B">1° Año - B</option>
+                        <option value="2A">2° Año - A</option>
+                        <option value="2B">2° Año - B</option>
+                        <option value="3A">3° Año - A</option>
+                        <option value="3B">3° Año - B</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Fecha de Nacimiento *</label>
+                    <input type="date" id="edit-fecha_nacimiento"
+                           class="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                           required>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Teléfono</label>
+                    <input type="tel" id="edit-telefono"
+                           class="mt-1 block w-full p-2 border border-gray-300 rounded-md">
+                </div>
+
+                <div class="flex gap-4 pt-4">
+                    <button type="submit" 
+                            class="flex-1 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
+                        Actualizar
+                    </button>
+                    <button type="button" onclick="cerrarModal()"
+                            class="flex-1 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let alumnosData = [];
+
+        function cargarAlumnos() {
+            const filtroCurso = document.getElementById('filtro-curso').value;
+            let url = '/api/alumnos';
+            
+            if (filtroCurso) {
+                url = `/api/alumnos/curso/${filtroCurso}`;
+            }
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(alumnos => {
+                    alumnosData = alumnos;
+                    renderizarTabla(alumnos);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('tabla-alumnos').innerHTML = 
+                        '<tr><td colspan="4" class="px-6 py-4 text-center text-red-500">Error al cargar alumnos</td></tr>';
+                });
+        }
+
+        function renderizarTabla(alumnos) {
+            const tbody = document.getElementById('tabla-alumnos');
+            tbody.innerHTML = '';
+            
+            if (alumnos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No hay alumnos registrados</td></tr>';
+                return;
+            }
+            
+            alumnos.forEach(alumno => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50';
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">${alumno.nombre}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${alumno.email || 'No especificado'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${alumno.curso}</td>
+                    <td class="px-6 py-4 whitespace-nowrap space-x-2">
+                        <button onclick="editarAlumno(${alumno.id})" 
+                                class="text-blue-600 hover:text-blue-900 px-3 py-1 border border-blue-600 rounded hover:bg-blue-50">
+                            Editar
+                        </button>
+                        <button onclick="eliminarAlumno(${alumno.id})" 
+                                class="text-red-600 hover:text-red-900 px-3 py-1 border border-red-600 rounded hover:bg-red-50">
+                            Eliminar
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function editarAlumno(id) {
+            // Buscar alumno en los datos cargados
+            const alumno = alumnosData.find(a => a.id === id);
+            if (alumno) {
+                abrirModalEdicion(alumno);
+            } else {
+                // Si no está en cache, cargar desde API
+                fetch(`/api/alumnos/${id}`)
+                    .then(response => response.json())
+                    .then(alumno => {
+                        abrirModalEdicion(alumno);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error al cargar datos del alumno');
+                    });
+            }
+        }
+
+        function abrirModalEdicion(alumno) {
+            // Llenar formulario con datos del alumno
+            document.getElementById('edit-id').value = alumno.id;
+            document.getElementById('edit-nombre').value = alumno.nombre;
+            document.getElementById('edit-email').value = alumno.email || '';
+            document.getElementById('edit-curso').value = alumno.curso;
+            document.getElementById('edit-fecha_nacimiento').value = alumno.fecha_nacimiento;
+            document.getElementById('edit-telefono').value = alumno.telefono || '';
+            
+            // Mostrar modal
+            document.getElementById('modal-edicion').classList.remove('hidden');
+        }
+
+        function cerrarModal() {
+            document.getElementById('modal-edicion').classList.add('hidden');
+            document.getElementById('form-edicion').reset();
+        }
+
+        // Manejar envío del formulario de edición
+        document.getElementById('form-edicion').addEventListener('submit', function(e) {
+            e.preventDefault();
+            actualizarAlumno();
+        });
+
+        function actualizarAlumno() {
+            const id = document.getElementById('edit-id').value;
+            const alumno = {
+                nombre: document.getElementById('edit-nombre').value.trim(),
+                email: document.getElementById('edit-email').value.trim(),
+                curso: document.getElementById('edit-curso').value,
+                fecha_nacimiento: document.getElementById('edit-fecha_nacimiento').value,
+                telefono: document.getElementById('edit-telefono').value.trim()
+            };
+
+            // Validación básica
+            if (!alumno.nombre || !alumno.email || !alumno.curso || !alumno.fecha_nacimiento) {
+                alert('Por favor completa todos los campos requeridos');
+                return;
+            }
+
+            fetch(`/api/alumnos/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(alumno)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    alert('Alumno actualizado exitosamente');
+                    cerrarModal();
+                    cargarAlumnos(); // Recargar la tabla
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al actualizar el alumno');
+            });
+        }
+
+        function eliminarAlumno(id) {
+            if (confirm('¿Estás seguro de eliminar este alumno?')) {
+                fetch(`/api/alumnos/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    cargarAlumnos();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al eliminar alumno');
+                });
+            }
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('modal-edicion').addEventListener('click', function(e) {
+            if (e.target === this) {
+                cerrarModal();
+            }
+        });
+
+        // Cargar alumnos al iniciar
+        document.addEventListener('DOMContentLoaded', cargarAlumnos);
+    </script>
+</body>
+</html>
