@@ -77,13 +77,15 @@ function guardarAlumno() {
     
     console.log('📤 Enviando alumno:', alumno);
     
-    // Mostrar loading
+    // URL de tu backend en Render - IMPORTANTE: ESTA ES TU URL
+    const backendURL = 'https://institucion-backend.onrender.com';
+    
     const boton = document.querySelector('button[type="submit"]');
     const textoOriginal = boton.textContent;
     boton.textContent = 'Guardando...';
     boton.disabled = true;
     
-    fetch('/api/alumnos', {
+    fetch(backendURL + '/api/alumnos', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -92,6 +94,9 @@ function guardarAlumno() {
     })
     .then(response => {
         console.log('📥 Respuesta recibida, status:', response.status);
+        if (!response.ok) {
+            throw new Error('Error del servidor: ' + response.status);
+        }
         return response.json();
     })
     .then(data => {
@@ -111,7 +116,6 @@ function guardarAlumno() {
         alert('Error al guardar el alumno. Verifica que el servidor esté funcionando.');
     })
     .finally(() => {
-        // Restaurar botón
         boton.textContent = textoOriginal;
         boton.disabled = false;
     });
