@@ -1,10 +1,18 @@
-// Validación y envío del formulario de alumnos
+// Base de datos en el navegador del usuario
+function obtenerAlumnos() {
+    const alumnos = localStorage.getItem('alumnos');
+    return alumnos ? JSON.parse(alumnos) : [];
+}
+
+function guardarAlumnos(alumnos) {
+    localStorage.setItem('alumnos', JSON.stringify(alumnos));
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('form-alumno');
     if (form) {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            
             if (validarFormulario()) {
                 guardarAlumno();
             }
@@ -15,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
 function validarFormulario() {
     let valido = true;
     
-    // Validar nombre
     const nombre = document.getElementById('nombre').value.trim();
     if (!nombre) {
         mostrarError('error-nombre', 'El nombre es requerido');
@@ -24,7 +31,6 @@ function validarFormulario() {
         ocultarError('error-nombre');
     }
     
-    // Validar email
     const email = document.getElementById('email').value.trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
@@ -34,7 +40,6 @@ function validarFormulario() {
         ocultarError('error-email');
     }
     
-    // Validar curso
     const curso = document.getElementById('curso').value;
     if (!curso) {
         mostrarError('error-curso', 'Selecciona un curso');
@@ -43,7 +48,6 @@ function validarFormulario() {
         ocultarError('error-curso');
     }
     
-    // Validar fecha
     const fecha = document.getElementById('fecha_nacimiento').value;
     if (!fecha) {
         mostrarError('error-fecha', 'Fecha válida requerida');
@@ -68,63 +72,52 @@ function ocultarError(id) {
 
 function guardarAlumno() {
     const alumno = {
+        id: Date.now(), // ID único
         nombre: document.getElementById('nombre').value.trim(),
         email: document.getElementById('email').value.trim(),
         curso: document.getElementById('curso').value,
         fecha_nacimiento: document.getElementById('fecha_nacimiento').value,
-        telefono: document.getElementById('telefono').value.trim()
+        telefono: document.getElementById('telefono').value.trim(),
+        fecha_creacion: new Date().toISOString()
     };
     
-    console.log('📤 Enviando alumno:', alumno);
-    
-    // URL de tu backend en Render - IMPORTANTE: ESTA ES TU URL
-   const backendURL = 'https://sistema-alumnos-final.onrender.com';
+    console.log('Guardando alumno:', alumno);
     
     const boton = document.querySelector('button[type="submit"]');
     const textoOriginal = boton.textContent;
     boton.textContent = 'Guardando...';
     boton.disabled = true;
     
-    fetch(backendURL + '/api/alumnos', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(alumno)
-    })
-    .then(response => {
-        console.log('📥 Respuesta recibida, status:', response.status);
-        if (!response.ok) {
-            throw new Error('Error del servidor: ' + response.status);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('✅ Datos recibidos:', data);
-        
-        if (data.error) {
-            alert('Error: ' + data.error);
-        } else if (data.id) {
+    // Simular delay de red
+    setTimeout(() => {
+        try {
+            const alumnos = obtenerAlumnos();
+            
+            // Verificar email único
+            if (alumnos.some(a => a.email === alumno.email)) {
+                alert('Error: El email ya está registrado');
+                return;
+            }
+            
+            alumnos.push(alumno);
+            guardarAlumnos(alumnos);
+            
             mostrarMensajeExito();
             limpiarFormulario();
-        } else {
-            alert('Respuesta inesperada del servidor');
+            
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al guardar el alumno.');
+        } finally {
+            boton.textContent = textoOriginal;
+            boton.disabled = false;
         }
-    })
-    .catch(error => {
-        console.error('❌ Error:', error);
-        alert('Error al guardar el alumno. Verifica que el servidor esté funcionando.');
-    })
-    .finally(() => {
-        boton.textContent = textoOriginal;
-        boton.disabled = false;
-    });
+    }, 800);
 }
 
 function mostrarMensajeExito() {
     const mensaje = document.getElementById('mensaje-exito');
     mensaje.classList.remove('hidden');
-    
     setTimeout(() => {
         mensaje.classList.add('hidden');
     }, 3000);
@@ -132,7 +125,6 @@ function mostrarMensajeExito() {
 
 function limpiarFormulario() {
     document.getElementById('form-alumno').reset();
-    // Ocultar todos los errores
     document.querySelectorAll('[id^="error-"]').forEach(el => {
         el.classList.add('hidden');
     });
