@@ -78,7 +78,7 @@ function guardarAlumno() {
     console.log('📤 Enviando alumno:', alumno);
     
     // URL de tu backend en Render - IMPORTANTE: ESTA ES TU URL
-    const backendURL = 'https://institucion-backend.onrender.com';
+   const backendURL = 'https://sistema-alumnos-final.onrender.com';
     
     const boton = document.querySelector('button[type="submit"]');
     const textoOriginal = boton.textContent;
