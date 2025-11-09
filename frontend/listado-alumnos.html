@@ -38,6 +38,9 @@
             <button onclick="cargarAlumnos()" class="ml-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
                 Filtrar
             </button>
+            <button onclick="limpiarDatos()" class="ml-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                Limpiar Todo
+            </button>
         </div>
 
         <!-- Tabla de alumnos -->
@@ -48,12 +51,13 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Curso</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha Nacimiento</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-alumnos" class="divide-y divide-gray-200">
                     <tr>
-                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">Cargando alumnos...</td>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">Cargando alumnos...</td>
                     </tr>
                 </tbody>
             </table>
@@ -123,28 +127,31 @@
     </div>
 
     <script>
-        // Variables globales
-        let alumnosData = [];
+        // Obtener alumnos del localStorage
+        function obtenerAlumnos() {
+            const alumnosGuardados = localStorage.getItem('alumnos');
+            return alumnosGuardados ? JSON.parse(alumnosGuardados) : [];
+        }
+
+        function guardarAlumnos(alumnos) {
+            localStorage.setItem('alumnos', JSON.stringify(alumnos));
+        }
 
         function cargarAlumnos() {
             const filtroCurso = document.getElementById('filtro-curso').value;
-            let url = '/api/alumnos';
+            let alumnos = obtenerAlumnos();
             
+            console.log('Alumnos cargados:', alumnos);
+            
+            // Aplicar filtro si hay
             if (filtroCurso) {
-                url = `/api/alumnos/curso/${filtroCurso}`;
+                alumnos = alumnos.filter(a => a.curso === filtroCurso);
             }
             
-            fetch(url)
-                .then(response => response.json())
-                .then(alumnos => {
-                    alumnosData = alumnos;
-                    renderizarTabla(alumnos);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('tabla-alumnos').innerHTML = 
-                        '<tr><td colspan="4" class="px-6 py-4 text-center text-red-500">Error al cargar alumnos</td></tr>';
-                });
+            // Ordenar por fecha (más reciente primero)
+            alumnos.sort((a, b) => new Date(b.fecha_creacion) - new Date(a.fecha_creacion));
+            
+            renderizarTabla(alumnos);
         }
 
         function renderizarTabla(alumnos) {
@@ -152,7 +159,7 @@
             tbody.innerHTML = '';
             
             if (alumnos.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No hay alumnos registrados</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No hay alumnos registrados</td></tr>';
                 return;
             }
             
@@ -163,6 +170,7 @@
                     <td class="px-6 py-4 whitespace-nowrap">${alumno.nombre}</td>
                     <td class="px-6 py-4 whitespace-nowrap">${alumno.email || 'No especificado'}</td>
                     <td class="px-6 py-4 whitespace-nowrap">${alumno.curso}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${alumno.fecha_nacimiento || 'No especificada'}</td>
                     <td class="px-6 py-4 whitespace-nowrap space-x-2">
                         <button onclick="editarAlumno(${alumno.id})" 
                                 class="text-blue-600 hover:text-blue-900 px-3 py-1 border border-blue-600 rounded hover:bg-blue-50">
@@ -179,35 +187,19 @@
         }
 
         function editarAlumno(id) {
-            // Buscar alumno en los datos cargados
-            const alumno = alumnosData.find(a => a.id === id);
-            if (alumno) {
-                abrirModalEdicion(alumno);
-            } else {
-                // Si no está en cache, cargar desde API
-                fetch(`/api/alumnos/${id}`)
-                    .then(response => response.json())
-                    .then(alumno => {
-                        abrirModalEdicion(alumno);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Error al cargar datos del alumno');
-                    });
-            }
-        }
-
-        function abrirModalEdicion(alumno) {
-            // Llenar formulario con datos del alumno
-            document.getElementById('edit-id').value = alumno.id;
-            document.getElementById('edit-nombre').value = alumno.nombre;
-            document.getElementById('edit-email').value = alumno.email || '';
-            document.getElementById('edit-curso').value = alumno.curso;
-            document.getElementById('edit-fecha_nacimiento').value = alumno.fecha_nacimiento;
-            document.getElementById('edit-telefono').value = alumno.telefono || '';
+            const alumnos = obtenerAlumnos();
+            const alumno = alumnos.find(a => a.id === id);
             
-            // Mostrar modal
-            document.getElementById('modal-edicion').classList.remove('hidden');
+            if (alumno) {
+                document.getElementById('edit-id').value = alumno.id;
+                document.getElementById('edit-nombre').value = alumno.nombre;
+                document.getElementById('edit-email').value = alumno.email || '';
+                document.getElementById('edit-curso').value = alumno.curso;
+                document.getElementById('edit-fecha_nacimiento').value = alumno.fecha_nacimiento;
+                document.getElementById('edit-telefono').value = alumno.telefono || '';
+                
+                document.getElementById('modal-edicion').classList.remove('hidden');
+            }
         }
 
         function cerrarModal() {
@@ -222,58 +214,45 @@
         });
 
         function actualizarAlumno() {
-            const id = document.getElementById('edit-id').value;
-            const alumno = {
+            const id = parseInt(document.getElementById('edit-id').value);
+            const alumnos = obtenerAlumnos();
+            const alumnoIndex = alumnos.findIndex(a => a.id === id);
+            
+            if (alumnoIndex === -1) {
+                alert('Alumno no encontrado');
+                return;
+            }
+            
+            alumnos[alumnoIndex] = {
+                ...alumnos[alumnoIndex],
                 nombre: document.getElementById('edit-nombre').value.trim(),
                 email: document.getElementById('edit-email').value.trim(),
                 curso: document.getElementById('edit-curso').value,
                 fecha_nacimiento: document.getElementById('edit-fecha_nacimiento').value,
                 telefono: document.getElementById('edit-telefono').value.trim()
             };
-
-            // Validación básica
-            if (!alumno.nombre || !alumno.email || !alumno.curso || !alumno.fecha_nacimiento) {
-                alert('Por favor completa todos los campos requeridos');
-                return;
-            }
-
-            fetch(`/api/alumnos/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(alumno)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert('Error: ' + data.error);
-                } else {
-                    alert('Alumno actualizado exitosamente');
-                    cerrarModal();
-                    cargarAlumnos(); // Recargar la tabla
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error al actualizar el alumno');
-            });
+            
+            guardarAlumnos(alumnos);
+            alert('Alumno actualizado exitosamente');
+            cerrarModal();
+            cargarAlumnos();
         }
 
         function eliminarAlumno(id) {
             if (confirm('¿Estás seguro de eliminar este alumno?')) {
-                fetch(`/api/alumnos/${id}`, {
-                    method: 'DELETE'
-                })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message);
-                    cargarAlumnos();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error al eliminar alumno');
-                });
+                const alumnos = obtenerAlumnos();
+                const nuevosAlumnos = alumnos.filter(a => a.id !== id);
+                guardarAlumnos(nuevosAlumnos);
+                cargarAlumnos();
+                alert('Alumno eliminado exitosamente');
+            }
+        }
+
+        function limpiarDatos() {
+            if (confirm('¿Estás seguro de eliminar TODOS los alumnos? Esta acción no se puede deshacer.')) {
+                localStorage.removeItem('alumnos');
+                cargarAlumnos();
+                alert('Todos los alumnos han sido eliminados');
             }
         }
 
